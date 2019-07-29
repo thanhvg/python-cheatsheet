@@ -1,0 +1,1920 @@
+* Comprehensive Python Cheatsheet
+  :PROPERTIES:
+  :CUSTOM_ID: comprehensive-python-cheatsheet
+  :END:
+
+** Main
+   :PROPERTIES:
+   :CUSTOM_ID: main
+   :END:
+
+#+BEGIN_SRC python
+    if __name__ == '__main__':
+        main()
+#+END_SRC
+
+** List
+   :PROPERTIES:
+   :CUSTOM_ID: list
+   :END:
+
+#+BEGIN_SRC python
+    list = list[from_inclusive : to_exclusive : step_size]
+    list.append(el)
+    list.extend(list)
+    list += [el]
+    list += list
+#+END_SRC
+
+#+BEGIN_SRC python
+    list.sort()
+    list.reverse()
+    list = sorted(list)
+    iter = reversed(list)
+#+END_SRC
+
+#+BEGIN_SRC python
+    sum_of_elements  = sum(list)
+    elementwise_sum  = [sum(pair) for pair in zip(list_a, list_b)]
+    sorted_by_second = sorted(list, key=lambda el: el[1])
+    sorted_by_both   = sorted(list, key=lambda el: (el[1], el[0]))
+    flattened_list   = list(itertools.chain.from_iterable(list))
+    list_of_chars    = list(str)
+    product_of_elems = functools.reduce(lambda out, x: out * x, list)
+#+END_SRC
+
+#+BEGIN_SRC python
+    index = list.index(el)  # Returns first index of item. 
+    list.insert(index, el)  # Inserts item at index and moves the rest to the right.
+    el = list.pop([index])  # Removes and returns item at index or from the end.
+    list.remove(el)         # Removes first occurrence of item.
+    list.clear()              # Removes all items.   
+#+END_SRC
+
+** Dictionary
+   :PROPERTIES:
+   :CUSTOM_ID: dictionary
+   :END:
+
+#+BEGIN_SRC python
+    view  = dict.keys()
+    view  = dict.values()
+    view  = dict.items()
+    value = dict.get(key, default)         # Returns default if key does not exist.
+    value = dict.setdefault(key, default)  # Same, but also adds default to dict.
+    dict.update(dict)
+#+END_SRC
+
+#+BEGIN_SRC python
+    collections.defaultdict(type)     # Creates a dictionary with default value of type.
+    collections.defaultdict(lambda: 1)  # Creates a dictionary with default value 1.
+    collections.OrderedDict()           # Creates ordered dictionary.
+#+END_SRC
+
+#+BEGIN_SRC python
+    dict(list)                        # Initiates a dict from list of key-value pairs.
+    dict(zip(keys, values))             # Initiates a dict from two lists.
+    {k: v for k, v in dict.items() if k in list}  # Filters a dict by keys.
+#+END_SRC
+
+*** Counter
+    :PROPERTIES:
+    :CUSTOM_ID: counter
+    :END:
+
+#+BEGIN_SRC python
+    >>> from collections import Counter
+    >>> colors = ['blue', 'red', 'blue', 'yellow', 'blue', 'red']
+    >>> Counter(colors)
+    Counter({'blue': 3, 'red': 2, 'yellow': 1})
+    >>> counter.most_common()[0][0]
+    'blue'
+#+END_SRC
+
+** Set
+   :PROPERTIES:
+   :CUSTOM_ID: set
+   :END:
+
+#+BEGIN_SRC python
+    set = set()
+    set.add(el)
+    set.update(set)
+    set.clear()
+#+END_SRC
+
+#+BEGIN_SRC python
+    set  = set.union(set)                 # Or: set | set
+    set  = set.intersection(set)          # Or: set & set
+    set  = set.difference(set)            # Or: set - set
+    set  = set.symmetric_difference(set)  # Or: set ^ set
+    bool = set.issubset(set)
+    bool = set.issuperset(set)
+#+END_SRC
+
+*** Frozenset
+    :PROPERTIES:
+    :CUSTOM_ID: frozenset
+    :END:
+
+**** Is hashable and can be used as a key in dictionary.
+     :PROPERTIES:
+     :CUSTOM_ID: is-hashable-and-can-be-used-as-a-key-in-dictionary.
+     :END:
+
+#+BEGIN_SRC python
+    frozenset = frozenset(collection)
+#+END_SRC
+
+** Range
+   :PROPERTIES:
+   :CUSTOM_ID: range
+   :END:
+
+#+BEGIN_SRC python
+    range(to_exclusive)
+    range(from_inclusive, to_exclusive)
+    range(from_inclusive, to_exclusive, step_size)
+    range(from_inclusive, to_exclusive, -step_size)
+#+END_SRC
+
+#+BEGIN_SRC python
+    from_inclusive = range.start
+    to_exclusive   = range.stop
+#+END_SRC
+
+** Enumerate
+   :PROPERTIES:
+   :CUSTOM_ID: enumerate
+   :END:
+
+#+BEGIN_SRC python
+    for i, el in enumerate(collection [, i_start]):
+        ...
+#+END_SRC
+
+** Named Tuple
+   :PROPERTIES:
+   :CUSTOM_ID: named-tuple
+   :END:
+
+#+BEGIN_SRC python
+    >>> Point = collections.namedtuple('Point', ['x', 'y'])
+    >>> a = Point(1, y=2)
+    Point(x=1, y=2)
+    >>> a.x
+    1
+    >>> getattr(a, 'y')
+    2
+    >>> Point._fields
+    ('x', 'y')
+#+END_SRC
+
+** Iterator
+   :PROPERTIES:
+   :CUSTOM_ID: iterator
+   :END:
+
+**** Skips first element:
+     :PROPERTIES:
+     :CUSTOM_ID: skips-first-element
+     :END:
+
+#+BEGIN_SRC python
+    next(iter)
+    for element in iter:
+        ...
+#+END_SRC
+
+**** Reads input until it reaches an empty line:
+     :PROPERTIES:
+     :CUSTOM_ID: reads-input-until-it-reaches-an-empty-line
+     :END:
+
+#+BEGIN_SRC python
+    for line in iter(input, ''):
+        ...
+#+END_SRC
+
+**** Same, but prints a message every time:
+     :PROPERTIES:
+     :CUSTOM_ID: same-but-prints-a-message-every-time
+     :END:
+
+#+BEGIN_SRC python
+    from functools import partial
+    for line in iter(partial(input, 'Please enter value'), ''):
+        ...
+#+END_SRC
+
+** Generator
+   :PROPERTIES:
+   :CUSTOM_ID: generator
+   :END:
+
+*Convenient way to implement the iterator protocol.*
+
+#+BEGIN_SRC python
+    def step(start, step):
+        while True:
+            yield start
+            start += step
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> stepper = step(10, 2)
+    >>> next(stepper), next(stepper), next(stepper)
+    (10, 12, 14)
+#+END_SRC
+
+** Type
+   :PROPERTIES:
+   :CUSTOM_ID: type
+   :END:
+
+#+BEGIN_SRC python
+    type = type(el)  # <class 'int'> / <class 'str'> / ...
+#+END_SRC
+
+#+BEGIN_SRC python
+    from numbers import Number, Integral, Real, Rational, Complex
+    is_number   = isinstance(el, Number)
+    is_function = callable(el)
+#+END_SRC
+
+** String
+   :PROPERTIES:
+   :CUSTOM_ID: string
+   :END:
+
+#+BEGIN_SRC python
+    str  = str.strip()           # Strips all whitespace characters.
+    str  = str.strip('chars')  # Strips all passed characters.
+#+END_SRC
+
+#+BEGIN_SRC python
+    list = str.split()                       # Splits on any whitespace character.
+    list = str.split(sep=None, maxsplit=-1)  # Splits on 'sep' at most 'maxsplit' times.
+    str  = str.join(list)                  # Joins elements using string as separator.
+#+END_SRC
+
+#+BEGIN_SRC python
+    str  = str.replace(old_str, new_str)
+    bool = str.startswith(sub_str)      # Pass tuple of strings for multiple options.
+    bool = str.endswith(sub_str)        # Pass tuple of strings for multiple options.
+    int  = str.index(sub_str)           # Returns first index of a substring.
+    bool = str.isnumeric()                # True if str contains only numeric characters.
+    list = textwrap.wrap(str, width)      # Nicely breaks string into lines.
+#+END_SRC
+
+*** Char
+    :PROPERTIES:
+    :CUSTOM_ID: char
+    :END:
+
+#+BEGIN_SRC python
+    str = chr(int)  # Converts int to unicode char.
+    int = ord(str)  # Converts unicode char to int.
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> ord('0'), ord('9')
+    (48, 57)
+    >>> ord('A'), ord('Z')
+    (65, 90)
+    >>> ord('a'), ord('z')
+    (97, 122)
+#+END_SRC
+
+*** Print
+    :PROPERTIES:
+    :CUSTOM_ID: print
+    :END:
+
+#+BEGIN_SRC python
+    print(el_1 [, el_2, end='', sep='', file=file])  # Use 'file=sys.stderr' for errors.
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> from pprint import pprint
+    >>> pprint(locals())
+    {'__doc__': None,
+     '__name__': '__main__',
+     '__package__': None, ...}
+#+END_SRC
+
+** Regex
+   :PROPERTIES:
+   :CUSTOM_ID: regex
+   :END:
+
+#+BEGIN_SRC python
+    import re
+    str   = re.sub(regex, new, text, count=0)  # Substitutes all occurrences.
+    list  = re.findall(regex, text)
+    list  = re.split(regex, text, maxsplit=0)  # Use brackets in regex to keep the matches.
+    Match = re.search(regex, text)             # Searches for first occurrence of pattern.
+    Match = re.match(regex, text)              # Searches only at the beginning of the text.
+    Match_iter = re.finditer(regex, text)      # Searches for all occurrences of pattern.
+#+END_SRC
+
+-  *Parameter 'flags=re.IGNORECASE' can be used with all functions.
+   Parameter 'flags=re.DOTALL' makes dot also accept newline.*\\
+-  *Use '\\1' or r'\1' for backreference.*\\
+-  *Use ? to make operators non-greedy.*
+
+*** Match Object
+    :PROPERTIES:
+    :CUSTOM_ID: match-object
+    :END:
+
+#+BEGIN_SRC python
+    str = Match.group()   # Whole match.
+    str = Match.group(1)  # Part in first bracket.
+    int = Match.start()   # Start index of a match.
+    int = Match.end()     # Exclusive end index of a match.
+#+END_SRC
+
+*** Special Sequences
+    :PROPERTIES:
+    :CUSTOM_ID: special-sequences
+    :END:
+
+*Use capital letter for negation.*
+
+#+BEGIN_SRC python
+    '\d' == '[0-9]'          # Digit
+    '\s' == '[ \t\n\r\f\v]'  # Whitespace
+    '\w' == '[a-zA-Z0-9_]'   # Alphanumeric
+#+END_SRC
+
+** Format
+   :PROPERTIES:
+   :CUSTOM_ID: format
+   :END:
+
+#+BEGIN_SRC python
+    str = f'{el_1}, {el_2}'
+    str = '{}, {}'.format(el_1, el_2)
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> Person = namedtuple('Person', 'name height')
+    >>> person = Person('Jean-Luc', 187)
+    >>> f'{person.height:10}'
+    '       187'
+    >>> '{p.height:10}'.format(p=person)
+    '       187'
+#+END_SRC
+
+*** General Options
+    :PROPERTIES:
+    :CUSTOM_ID: general-options
+    :END:
+
+#+BEGIN_SRC python
+    {el:<10}   # 'el      '
+    {el:>10}   # '      el'
+    {el:^10}   # '   el   '
+    {el:->10}  # '------el'
+    {el:>0}    # 'el'
+#+END_SRC
+
+*** Options Specific to Strings
+    :PROPERTIES:
+    :CUSTOM_ID: options-specific-to-strings
+    :END:
+
+#+BEGIN_SRC python
+    {'abcde':.3}    # 'abc'
+    {'abcde':10.3}  # 'abc       '
+#+END_SRC
+
+*** Options specific to Numbers
+    :PROPERTIES:
+    :CUSTOM_ID: options-specific-to-numbers
+    :END:
+
+#+BEGIN_SRC python
+    {1.23456:.3f}    # '1.235'
+    {1.23456:10.3f}  # '     1.235'
+    {123456:10,}     # '   123,456'
+    {123456:10_}     # '   123_456'
+    {3:08b}          # '00000011' -> Binary with leading zeros.
+    {3:0<8b}         # '11000000' -> Binary with trailing zeros.
+#+END_SRC
+
+**** Float presentation types:
+     :PROPERTIES:
+     :CUSTOM_ID: float-presentation-types
+     :END:
+
+-  ='f'= - Fixed point: =.precisionf=
+-  ='e'= - Exponent
+
+**** Integer presentation types:
+     :PROPERTIES:
+     :CUSTOM_ID: integer-presentation-types
+     :END:
+
+-  ='c'= - Character
+-  ='b'= - Binary
+-  ='x'= - Hex
+-  ='X'= - HEX
+
+** Numbers
+   :PROPERTIES:
+   :CUSTOM_ID: numbers
+   :END:
+
+*** Basic Functions
+    :PROPERTIES:
+    :CUSTOM_ID: basic-functions
+    :END:
+
+#+BEGIN_SRC python
+    round(num [, ndigits])
+    abs(num)
+    math.pow(x, y)  # Or: x ** y
+#+END_SRC
+
+*** Constants
+    :PROPERTIES:
+    :CUSTOM_ID: constants
+    :END:
+
+#+BEGIN_SRC python
+    from math import e, pi
+#+END_SRC
+
+*** Trigonometry
+    :PROPERTIES:
+    :CUSTOM_ID: trigonometry
+    :END:
+
+#+BEGIN_SRC python
+    from math import cos, acos, sin, asin, tan, atan, degrees, radians
+#+END_SRC
+
+*** Logarithm
+    :PROPERTIES:
+    :CUSTOM_ID: logarithm
+    :END:
+
+#+BEGIN_SRC python
+    from math import log, log10, log2
+    log(x [, base])  # Base e, if not specified.
+    log10(x)         # Base 10.
+    log2(x)          # Base 2.
+#+END_SRC
+
+*** Infinity, nan
+    :PROPERTIES:
+    :CUSTOM_ID: infinity-nan
+    :END:
+
+#+BEGIN_SRC python
+    from math import inf, nan, isfinite, isinf, isnan
+#+END_SRC
+
+**** Or:
+     :PROPERTIES:
+     :CUSTOM_ID: or
+     :END:
+
+#+BEGIN_SRC python
+    float('inf'), float('nan')
+#+END_SRC
+
+*** Random
+    :PROPERTIES:
+    :CUSTOM_ID: random
+    :END:
+
+#+BEGIN_SRC python
+    from random import random, randint, choice, shuffle
+    float = random()
+    int   = randint(from_inclusive, to_inclusive)
+    el    = choice(list)
+    shuffle(list)
+#+END_SRC
+
+** Datetime
+   :PROPERTIES:
+   :CUSTOM_ID: datetime
+   :END:
+
+#+BEGIN_SRC python
+    from datetime import datetime, strptime
+    now = datetime.now()
+    now.month                      # 3
+    now.strftime('%Y%m%d')         # '20180315'
+    now.strftime('%Y%m%d%H%M%S')   # '20180315002834'
+    datetime = strptime('2015-05-12 00:39', '%Y-%m-%d %H:%M')
+#+END_SRC
+
+** Arguments
+   :PROPERTIES:
+   :CUSTOM_ID: arguments
+   :END:
+
+**"*" is the splat operator, that takes a list as input, and expands it
+into actual positional arguments in the function call.**
+
+#+BEGIN_SRC python
+    args   = (1, 2)
+    kwargs = {'x': 3, 'y': 4, 'z': 5}
+    func(*args, **kwargs)  
+#+END_SRC
+
+**** Is the same as:
+     :PROPERTIES:
+     :CUSTOM_ID: is-the-same-as
+     :END:
+
+#+BEGIN_SRC python
+    func(1, 2, x=3, y=4, z=5)
+#+END_SRC
+
+**** Splat operator can also be used in function declarations:
+     :PROPERTIES:
+     :CUSTOM_ID: splat-operator-can-also-be-used-in-function-declarations
+     :END:
+
+#+BEGIN_SRC python
+    def add(*a):
+        return sum(a)
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> add(1, 2, 3)
+    6
+#+END_SRC
+
+**** And in few other places:
+     :PROPERTIES:
+     :CUSTOM_ID: and-in-few-other-places
+     :END:
+
+#+BEGIN_SRC python
+    >>> a = (1, 2, 3)
+    >>> [*a]
+    [1, 2, 3]
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> head, *body, tail = [1, 2, 3, 4]
+    >>> body
+    [2, 3]
+#+END_SRC
+
+** Inline
+   :PROPERTIES:
+   :CUSTOM_ID: inline
+   :END:
+
+*** Lambda
+    :PROPERTIES:
+    :CUSTOM_ID: lambda
+    :END:
+
+#+BEGIN_SRC python
+    lambda: return_value
+    lambda argument_1, argument_2: return_value
+#+END_SRC
+
+*** Comprehension
+    :PROPERTIES:
+    :CUSTOM_ID: comprehension
+    :END:
+
+#+BEGIN_SRC python
+    list = [i+1 for i in range(10)]         # [1, 2, ..., 10]
+    set  = {i for i in range(10) if i > 5}  # {6, 7, ..., 9}
+    dict = {i: i*2 for i in range(10)}      # {0: 0, 1: 2, ..., 9: 18}
+    iter = (x+5 for x in range(10))         # (5, 6, ..., 14)
+#+END_SRC
+
+#+BEGIN_SRC python
+    out = [i+j for i in range(10) for j in range(10)]
+#+END_SRC
+
+**** Is the same as:
+     :PROPERTIES:
+     :CUSTOM_ID: is-the-same-as-1
+     :END:
+
+#+BEGIN_SRC python
+    out = []
+    for i in range(10):
+        for j in range(10):
+            out.append(i+j)
+#+END_SRC
+
+*** Map, Filter, Reduce
+    :PROPERTIES:
+    :CUSTOM_ID: map-filter-reduce
+    :END:
+
+#+BEGIN_SRC python
+    from functools import reduce
+    iter     = map(lambda x: x + 1, range(10))          # (1, 2, ..., 10)
+    iter     = filter(lambda x: x > 5, range(10))       # (6, 7, ..., 9)
+    any_type = reduce(lambda sum, x: sum+x, range(10))  # 45
+#+END_SRC
+
+*** Any, All
+    :PROPERTIES:
+    :CUSTOM_ID: any-all
+    :END:
+
+#+BEGIN_SRC python
+    bool = any(el[1] for el in collection)
+#+END_SRC
+
+*** If - Else
+    :PROPERTIES:
+    :CUSTOM_ID: if---else
+    :END:
+
+#+BEGIN_SRC python
+    expression_if_true if condition else expression_if_false
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> [a if a else 'zero' for a in (0, 1, 0, 3)]
+    ['zero', 1, 'zero', 3]
+#+END_SRC
+
+*** Namedtuple, Enum, Class
+    :PROPERTIES:
+    :CUSTOM_ID: namedtuple-enum-class
+    :END:
+
+#+BEGIN_SRC python
+    from collections import namedtuple
+    Point = namedtuple('Point', 'x y')
+
+    from enum import Enum
+    Direction = Enum('Direction', 'n e s w')
+    Cutlery = Enum('Cutlery', {'knife': 1, 'fork': 2, 'spoon': 3})
+
+    # Warning: Objects will share the objects that are initialized in the dictionary!
+    Creature = type('Creature', (), {'position': Point(0, 0), 'direction': Direction.n})
+    creature = Creature()
+#+END_SRC
+
+** Closure
+   :PROPERTIES:
+   :CUSTOM_ID: closure
+   :END:
+
+#+BEGIN_SRC python
+    def get_multiplier(a):
+        def out(b):
+            return a * b
+        return out
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> multiply_by_3 = get_multiplier(3)
+    >>> multiply_by_3(10)
+    30
+#+END_SRC
+
+**** Or:
+     :PROPERTIES:
+     :CUSTOM_ID: or-1
+     :END:
+
+#+BEGIN_SRC python
+    from functools import partial
+    partial(function, arg_1 [, arg_2, ...])
+#+END_SRC
+
+** Decorator
+   :PROPERTIES:
+   :CUSTOM_ID: decorator
+   :END:
+
+#+BEGIN_SRC python
+    @closure_name
+    def function_that_gets_passed_to_closure():
+        ...
+#+END_SRC
+
+**** Debugger example:
+     :PROPERTIES:
+     :CUSTOM_ID: debugger-example
+     :END:
+
+#+BEGIN_SRC python
+    from functools import wraps
+
+    def debug(func):
+        @wraps(func)  # Needed for metadata copying (func name, ...).
+        def out(*args, **kwargs):
+            print(func.__name__)
+            return func(*args, **kwargs)
+        return out
+
+    @debug
+    def add(x, y):
+        return x + y
+#+END_SRC
+
+** Class
+   :PROPERTIES:
+   :CUSTOM_ID: class
+   :END:
+
+#+BEGIN_SRC python
+    class name:
+        def __init__(self, a):
+            self.a = a
+        def __str__(self):
+            return str(self.a)
+        def __repr__(self):
+            return str({'a': self.a})  # Or: return f'{self.__dict__}'
+
+        @classmethod
+        def get_class_name(cls):
+            return cls.__name__
+#+END_SRC
+
+*** Constructor Overloading
+    :PROPERTIES:
+    :CUSTOM_ID: constructor-overloading
+    :END:
+
+#+BEGIN_SRC python
+    class name:
+        def __init__(self, a=None):
+            self.a = a
+#+END_SRC
+
+*** Copy
+    :PROPERTIES:
+    :CUSTOM_ID: copy
+    :END:
+
+#+BEGIN_SRC python
+    from copy import copy, deepcopy
+    object = copy(object)
+    object = deepcopy(object)
+#+END_SRC
+
+** Enum
+   :PROPERTIES:
+   :CUSTOM_ID: enum
+   :END:
+
+#+BEGIN_SRC python
+    from enum import Enum, auto
+    class enum_name(Enum):
+        member_name_1 = value_1  
+        member_name_2 = value_2_a, value_2_b
+        member_name_3 = auto()  # Can be used for automatic indexing.
+        ...
+
+       @classmethod
+       def get_names(cls):
+          return [a.name for a in cls.__members__.values()]
+
+       @classmethod
+       def get_values(cls):
+          return [a.value for a in cls.__members__.values()]
+#+END_SRC
+
+#+BEGIN_SRC python
+    member  = enum.member_name
+    member  = enum['member_name']
+    member  = enum(value)
+    name    = member.name
+    value   = member.value
+#+END_SRC
+
+#+BEGIN_SRC python
+    list_of_members = list(enum)
+    member_names    = [a.name for a in enum]
+    random_member   = random.choice(list(enum))
+#+END_SRC
+
+*** Inline
+    :PROPERTIES:
+    :CUSTOM_ID: inline-1
+    :END:
+
+#+BEGIN_SRC python
+    Cutlery = Enum('Cutlery', ['knife', 'fork', 'spoon'])
+    Cutlery = Enum('Cutlery', 'knife fork spoon')
+    Cutlery = Enum('Cutlery', {'knife': 1, 'fork': 2, 'spoon': 3})
+
+    # Functions can not be values, so they must be enclosed in tuple:
+    LogicOp = Enum('LogicOp', {'AND': (lambda l, r: l and r, ),
+                               'OR' : (lambda l, r: l or r, )})
+
+    # But 'list(enum)' will only work if there is another value in the tuple:
+    LogicOp = Enum('LogicOp', {'AND': (auto(), lambda l, r: l and r),
+                               'OR' : (auto(), lambda l, r: l or r)})
+#+END_SRC
+
+** System
+   :PROPERTIES:
+   :CUSTOM_ID: system
+   :END:
+
+*** Arguments
+    :PROPERTIES:
+    :CUSTOM_ID: arguments-1
+    :END:
+
+#+BEGIN_SRC python
+    import sys
+    script_name = sys.argv[0]
+    arguments   = sys.argv[1:]
+#+END_SRC
+
+*** Read File
+    :PROPERTIES:
+    :CUSTOM_ID: read-file
+    :END:
+
+#+BEGIN_SRC python
+    def read_file(filename):
+        with open(filename, encoding='utf-8') as file:
+            return file.readlines()
+#+END_SRC
+
+*** Write to File
+    :PROPERTIES:
+    :CUSTOM_ID: write-to-file
+    :END:
+
+#+BEGIN_SRC python
+    def write_to_file(filename, text):
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(text)
+#+END_SRC
+
+*** Path
+    :PROPERTIES:
+    :CUSTOM_ID: path
+    :END:
+
+#+BEGIN_SRC python
+    import os
+    bool = os.path.exists(path)
+    bool = os.path.isfile(path)
+    bool = os.path.isdir(path)
+    list = os.listdir(path)
+#+END_SRC
+
+*** Execute Command
+    :PROPERTIES:
+    :CUSTOM_ID: execute-command
+    :END:
+
+#+BEGIN_SRC python
+    import os
+    str = os.popen(command).read()
+#+END_SRC
+
+**** Or:
+     :PROPERTIES:
+     :CUSTOM_ID: or-2
+     :END:
+
+#+BEGIN_SRC python
+    >>> import subprocess
+    >>> a = subprocess.run(['ls', '-a'], stdout=subprocess.PIPE)
+    >>> a.stdout
+    b'.\n..\nfile1.txt\nfile2.txt\n'
+    >>> a.returncode
+    0
+#+END_SRC
+
+*** Input
+    :PROPERTIES:
+    :CUSTOM_ID: input
+    :END:
+
+#+BEGIN_SRC python
+    filename = input('Enter a file name: ')
+#+END_SRC
+
+**** Prints lines until EOF:
+     :PROPERTIES:
+     :CUSTOM_ID: prints-lines-until-eof
+     :END:
+
+#+BEGIN_SRC python
+    while True:
+        try:
+            print(input())
+        except EOFError:
+            break
+#+END_SRC
+
+*** Recursion Limit
+    :PROPERTIES:
+    :CUSTOM_ID: recursion-limit
+    :END:
+
+#+BEGIN_SRC python
+    >>> sys.getrecursionlimit()
+    1000
+    >>> sys.setrecursionlimit(10000)
+#+END_SRC
+
+** JSON
+   :PROPERTIES:
+   :CUSTOM_ID: json
+   :END:
+
+#+BEGIN_SRC python
+    import json
+#+END_SRC
+
+*** Serialization
+    :PROPERTIES:
+    :CUSTOM_ID: serialization
+    :END:
+
+#+BEGIN_SRC python
+    str  = json.dumps(object, ensure_ascii=True, indent=None)
+    dict = json.loads(str)
+#+END_SRC
+
+**** To preserve order:
+     :PROPERTIES:
+     :CUSTOM_ID: to-preserve-order
+     :END:
+
+#+BEGIN_SRC python
+    from collections import OrderedDict
+    dict = json.loads(str, object_pairs_hook=OrderedDict)
+#+END_SRC
+
+*** Read File
+    :PROPERTIES:
+    :CUSTOM_ID: read-file-1
+    :END:
+
+#+BEGIN_SRC python
+    def read_json_file(filename):
+        with open(filename, encoding='utf-8') as file:
+            return json.load(file)
+#+END_SRC
+
+*** Write to File
+    :PROPERTIES:
+    :CUSTOM_ID: write-to-file-1
+    :END:
+
+#+BEGIN_SRC python
+    def write_to_json_file(filename, an_object):
+        with open(filename, 'w', encoding='utf-8') as file:
+            json.dump(an_object, file, ensure_ascii=False, indent=2)
+#+END_SRC
+
+** SQLite
+   :PROPERTIES:
+   :CUSTOM_ID: sqlite
+   :END:
+
+#+BEGIN_SRC python
+    import sqlite3
+    db = sqlite3.connect(filename)
+#+END_SRC
+
+*** Read
+    :PROPERTIES:
+    :CUSTOM_ID: read
+    :END:
+
+#+BEGIN_SRC python
+    cursor = db.execute(query)
+    if cursor:
+        cursor.fetchall()  # Or cursor.fetchone()
+    db.close()
+#+END_SRC
+
+*** Write
+    :PROPERTIES:
+    :CUSTOM_ID: write
+    :END:
+
+#+BEGIN_SRC python
+    db.execute(query)
+    db.commit()
+#+END_SRC
+
+** Pickle
+   :PROPERTIES:
+   :CUSTOM_ID: pickle
+   :END:
+
+#+BEGIN_SRC python
+    import pickle
+    favorite_color = {'lion': 'yellow', 'kitty': 'red'}
+    pickle.dump(favorite_color, open('data.p', 'wb'))
+    favorite_color = pickle.load(open('data.p', 'rb'))
+#+END_SRC
+
+** Exceptions
+   :PROPERTIES:
+   :CUSTOM_ID: exceptions
+   :END:
+
+#+BEGIN_SRC python
+    while True:
+        try:
+            x = int(input('Please enter a number: '))
+        except ValueError:
+            print('Oops!  That was no valid number.  Try again...')
+        else:
+            print('Thank you.')
+            break
+#+END_SRC
+
+**** Raising exception:
+     :PROPERTIES:
+     :CUSTOM_ID: raising-exception
+     :END:
+
+#+BEGIN_SRC python
+    raise ValueError('A very specific message!')
+#+END_SRC
+
+**** Finally:
+     :PROPERTIES:
+     :CUSTOM_ID: finally
+     :END:
+
+#+BEGIN_SRC python
+    >>> try:
+    ...     raise KeyboardInterrupt
+    ... finally:
+    ...     print('Goodbye, world!')
+    ... 
+    Goodbye, world!
+    Traceback (most recent call last):
+      File "stdin", line 2, in module
+    KeyboardInterrupt
+#+END_SRC
+
+** Bytes
+   :PROPERTIES:
+   :CUSTOM_ID: bytes
+   :END:
+
+*Bytes objects are immutable sequences of single bytes.*
+
+*** Encode
+    :PROPERTIES:
+    :CUSTOM_ID: encode
+    :END:
+
+#+BEGIN_SRC python
+    Bytes = b'str'
+    Bytes = str.encode(encoding='utf-8')
+    Bytes = int.to_bytes(length, byteorder='big|little', signed=False)
+    Bytes = bytes.fromhex(hex)
+#+END_SRC
+
+*** Decode
+    :PROPERTIES:
+    :CUSTOM_ID: decode
+    :END:
+
+#+BEGIN_SRC python
+    str = Bytes.decode('utf-8') 
+    int = int.from_bytes(Bytes, byteorder='big|little', signed=False)
+    hex = Bytes.hex()
+#+END_SRC
+
+*** Read Bytes from File
+    :PROPERTIES:
+    :CUSTOM_ID: read-bytes-from-file
+    :END:
+
+#+BEGIN_SRC python
+    def read_bytes(filename):
+        with open(filename, 'rb') as file:
+            return file.read()
+#+END_SRC
+
+*** Write Bytes to File
+    :PROPERTIES:
+    :CUSTOM_ID: write-bytes-to-file
+    :END:
+
+#+BEGIN_SRC python
+    def write_bytes(filename, bytes):
+        with open(filename, 'wb') as file:
+            file.write(bytes)
+#+END_SRC
+
+#+BEGIN_SRC python
+    Bytes = b''.join(list_of_Bytes)
+#+END_SRC
+
+** Struct
+   :PROPERTIES:
+   :CUSTOM_ID: struct
+   :END:
+
+*This module performs conversions between Python values and C struct
+represented as Python Bytes object.*
+
+#+BEGIN_SRC python
+    Bytes = struct.pack('format', value_1 [, value_2, ...])
+    tuple = struct.unpack('format', Bytes)
+#+END_SRC
+
+*** Example
+    :PROPERTIES:
+    :CUSTOM_ID: example
+    :END:
+
+#+BEGIN_SRC python
+    >>> from struct import pack, unpack, calcsize
+    >>> pack('hhl', 1, 2, 3)
+    b'\x00\x01\x00\x02\x00\x00\x00\x03'
+    >>> unpack('hhl', b'\x00\x01\x00\x02\x00\x00\x00\x03')
+    (1, 2, 3)
+    >>> calcsize('hhl')
+    8
+#+END_SRC
+
+*** Format
+    :PROPERTIES:
+    :CUSTOM_ID: format-1
+    :END:
+
+*Use capital leters for unsigned type.* * ='x'= - pad byte * ='c'= -
+char * ='h'= - short * ='i'= - int * ='l'= - long * ='q'= - long long *
+='f'= - float * ='d'= - double
+
+** Hashlib
+   :PROPERTIES:
+   :CUSTOM_ID: hashlib
+   :END:
+
+#+BEGIN_SRC python
+    >>> hashlib.md5(str.encode()).hexdigest()
+    '33d0eba106da4d3ebca17fcd3f4c3d77'
+#+END_SRC
+
+** Threading
+   :PROPERTIES:
+   :CUSTOM_ID: threading
+   :END:
+
+#+BEGIN_SRC python
+    from threading import Thread, RLock
+#+END_SRC
+
+*** Thread
+    :PROPERTIES:
+    :CUSTOM_ID: thread
+    :END:
+
+#+BEGIN_SRC python
+    thread = Thread(target=function, args=(first_arg, ))
+    thread.start()
+    ...
+    thread.join()
+#+END_SRC
+
+*** Lock
+    :PROPERTIES:
+    :CUSTOM_ID: lock
+    :END:
+
+#+BEGIN_SRC python
+    lock = Rlock()
+    lock.acquire()
+    ...
+    lock.release()
+#+END_SRC
+
+** Itertools
+   :PROPERTIES:
+   :CUSTOM_ID: itertools
+   :END:
+
+*Every function returns an iterator and can accept any collection and/or
+iterator. If you want to print the iterator, you need to pass it to the
+list() function.*
+
+#+BEGIN_SRC python
+    from itertools import *
+#+END_SRC
+
+*** Combinatoric iterators
+    :PROPERTIES:
+    :CUSTOM_ID: combinatoric-iterators
+    :END:
+
+#+BEGIN_SRC python
+    >>> combinations('abc', 2)
+    [('a', 'b'), ('a', 'c'), ('b', 'c')]
+
+    >>> combinations_with_replacement('abc', 2)
+    [('a', 'a'), ('a', 'b'), ('a', 'c'), 
+     ('b', 'b'), ('b', 'c'), ('c', 'c')]
+
+    >>> permutations('abc', 2)
+    [('a', 'b'), ('a', 'c'), 
+     ('b', 'a'), ('b', 'c'), 
+     ('c', 'a'), ('c', 'b')]
+
+    >>> product('ab', [1, 2])
+    [('a', 1), ('a', 2), 
+     ('b', 1), ('b', 2)]
+
+    >>> product([0, 1], repeat=3)
+    [(0, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1), 
+     (1, 0, 0), (1, 0, 1), (1, 1, 0), (1, 1, 1)]
+#+END_SRC
+
+*** Infinite iterators
+    :PROPERTIES:
+    :CUSTOM_ID: infinite-iterators
+    :END:
+
+#+BEGIN_SRC python
+    >>> i = count(5, 2)
+    >>> next(i), next(i), next(i)
+    (5, 7, 9)
+
+    >>> a = cycle('abc')
+    >>> [next(a) for _ in range(10)]
+    ['a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a']
+
+    >>> repeat(10, 3)
+    [10, 10, 10]
+#+END_SRC
+
+*** Iterators
+    :PROPERTIES:
+    :CUSTOM_ID: iterators
+    :END:
+
+#+BEGIN_SRC python
+    >>> chain([1, 2], range(3, 5))
+    [1, 2, 3, 4]
+
+    >>> compress('abc', [True, 0, 1])
+    ['a', 'c']
+
+    >>> islice([1, 2, 3], 1, None)  # islice(seq, from_inclusive, to_exclusive) 
+    [2, 3]
+
+    >>> people = [{'id': 1, 'name': 'bob'}, 
+                  {'id': 2, 'name': 'bob'}, 
+                  {'id': 3, 'name': 'peter'}]
+    >>> {name: list(ppp) for name, ppp in groupby(people, key=lambda p: p['name'])}
+    {'bob':   [{'id': 1, 'name': 'bob'}, 
+               {'id': 2, 'name': 'bob'}], 
+     'peter': [{'id': 3, 'name': 'peter'}]}
+#+END_SRC
+
+** Introspection and Metaprograming
+   :PROPERTIES:
+   :CUSTOM_ID: introspection-and-metaprograming
+   :END:
+
+*Inspecting code at runtime and code that generates code. You can:* *
+*Look at the attributes* * *Set new attributes* * *Create functions
+dynamically* * *Traverse the parent classes* * *Change values in the
+class*
+
+*** Variables
+    :PROPERTIES:
+    :CUSTOM_ID: variables
+    :END:
+
+#+BEGIN_SRC python
+    list = dir()      # In-scope variables.
+    dict = locals()   # Local variables.
+    dict = globals()  # Global variables.
+#+END_SRC
+
+*** Attributes
+    :PROPERTIES:
+    :CUSTOM_ID: attributes
+    :END:
+
+#+BEGIN_SRC python
+    >>> class Z:
+    ...     def __init__(self):
+    ...             self.a = 'abcde'
+    ...             self.b = 12345
+    >>> z = Z()
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> vars(z)
+    {'a': 'abcde', 'b': 12345}
+
+    >>> getattr(z, 'a')
+    'abcde'
+
+    >>> hasattr(z, 'c')
+    False
+
+    >>> setattr(z, 'c', 10)
+#+END_SRC
+
+*** Parameters
+    :PROPERTIES:
+    :CUSTOM_ID: parameters
+    :END:
+
+**** Getting the number of parameters of a function:
+     :PROPERTIES:
+     :CUSTOM_ID: getting-the-number-of-parameters-of-a-function
+     :END:
+
+#+BEGIN_SRC python
+    from inspect import signature
+    sig = signature(function)
+    no_of_params = len(sig.parameters)
+#+END_SRC
+
+*** Type
+    :PROPERTIES:
+    :CUSTOM_ID: type-1
+    :END:
+
+*Type is the root class. If only passed the object it returns it's type.
+Otherwise it creates a new class (and not the instance!):*
+
+#+BEGIN_SRC python
+    type(class_name, parents_tuple, attributes_dict)
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> Z = type('Z', (), {'a': 'abcde', 'b': 12345})
+    >>> z = Z()
+#+END_SRC
+
+*** MetaClass
+    :PROPERTIES:
+    :CUSTOM_ID: metaclass
+    :END:
+
+**** Class that creates class:
+     :PROPERTIES:
+     :CUSTOM_ID: class-that-creates-class
+     :END:
+
+#+BEGIN_SRC python
+    def my_meta_class(name, parents, attrs):
+        ...
+        return type(name, parents, attrs)
+#+END_SRC
+
+**** Or:
+     :PROPERTIES:
+     :CUSTOM_ID: or-3
+     :END:
+
+#+BEGIN_SRC python
+    class MyMetaClass(type):
+        def __new__(klass, name, parents, attrs):
+            ...
+            return type.__new__(klass, name, parents, attrs)
+#+END_SRC
+
+*** Metaclass Attribute
+    :PROPERTIES:
+    :CUSTOM_ID: metaclass-attribute
+    :END:
+
+*When class is created it checks if it has metaclass defined. If not, it
+recursively checks if any of his parents has it defined, and eventually
+comes to type:*
+
+#+BEGIN_SRC python
+    class BlaBla:
+        __metaclass__ = Bla
+#+END_SRC
+
+** Operator
+   :PROPERTIES:
+   :CUSTOM_ID: operator
+   :END:
+
+#+BEGIN_SRC python
+    from operator import add, sub, mul, truediv, floordiv, mod, pow, neg, abs, \
+                         eq, ne, lt, le, gt, ge, \
+                         not_, and_, or_, xor, \
+                         itemgetter
+#+END_SRC
+
+#+BEGIN_SRC python
+    from enum import Enum
+    from functools import reduce
+
+    product_of_elems = reduce(mul, list)
+    sorted_by_second = sorted(list, key=itemgetter(1))
+    sorted_by_both   = sorted(list, key=itemgetter(0, 1))
+    LogicOp          = Enum('LogicOp', {'AND': (and_, ),
+                                        'OR' : (or_, )})
+#+END_SRC
+
+** Eval
+   :PROPERTIES:
+   :CUSTOM_ID: eval
+   :END:
+
+*** Basic
+    :PROPERTIES:
+    :CUSTOM_ID: basic
+    :END:
+
+#+BEGIN_SRC python
+    >>> from ast import literal_eval
+    >>> literal_eval('1 + 1')
+    2
+    >>> literal_eval('[1, 2, 3]')
+    [1, 2, 3]
+#+END_SRC
+
+*** Detailed
+    :PROPERTIES:
+    :CUSTOM_ID: detailed
+    :END:
+
+#+BEGIN_SRC python
+    from ast import parse, Num, BinOp, UnaryOp, \
+                    Add, Sub, Mult, Div, Pow, BitXor, USub
+    import operator as op
+
+    operators = {Add:    op.add, 
+                 Sub:    op.sub, 
+                 Mult:   op.mul,
+                 Div:    op.truediv, 
+                 Pow:    op.pow, 
+                 BitXor: op.xor,
+                 USub:   op.neg}
+
+    def evaluate(expression):
+        root = parse(expression, mode='eval')
+        return eval_node(root.body)
+
+    def eval_node(node):
+        type_ = type(node)
+        if type_ == Num:
+            return node.n
+        if type_ not in [BinOp, UnaryOp]:
+            raise TypeError(node)
+        operator = operators[type(node.op)]
+        if type_ == BinOp:
+            left, right = eval_node(node.left), eval_node(node.right)
+            return operator(left, right)
+        elif type_ == UnaryOp:
+            operand = eval_node(node.operand)
+            return operator(operand)
+#+END_SRC
+
+#+BEGIN_SRC python
+    >>> evaluate('2^6')
+    4
+    >>> evaluate('2**6')
+    64
+    >>> evaluate('1 + 2*3**(4^5) / (6 + -7)')
+    -5.0
+#+END_SRC
+
+** Coroutine
+   :PROPERTIES:
+   :CUSTOM_ID: coroutine
+   :END:
+
+-  *Similar to Generator, but Generator pulls data through the pipe with
+   iteration, while Coroutine pushes data into the pipeline with
+   send().*\\
+-  *Coroutines provide more powerful data routing possibilities than
+   iterators.*\\
+-  *If you built a collection of simple data processing components, you
+   can glue them together into complex arrangements of pipes, branches,
+   merging, etc.*
+
+*** Helper Decorator
+    :PROPERTIES:
+    :CUSTOM_ID: helper-decorator
+    :END:
+
+-  *All coroutines must be "primed" by first calling .next()*\\
+-  *Remembering to call .next() is easy to forget.*\\
+-  *Solved by wrapping coroutines with a decorator:*
+
+#+BEGIN_SRC python
+    def coroutine(func):
+        def start(*args, **kwargs):
+            cr = func(*args, **kwargs)
+            next(cr)
+            return cr
+        return start
+#+END_SRC
+
+*** Pipeline Example
+    :PROPERTIES:
+    :CUSTOM_ID: pipeline-example
+    :END:
+
+#+BEGIN_SRC python
+    def reader(target):
+        for i in range(10):
+            target.send(i)
+        target.close()
+
+    @coroutine
+    def adder(target):
+        while True:
+            item = (yield)
+            target.send(item + 100)
+
+    @coroutine
+    def printer():
+        while True:
+            item = (yield)
+            print(item)
+
+    reader(adder(printer()))
+#+END_SRC
+
+brbr
+
+* Libraries
+  :PROPERTIES:
+  :CUSTOM_ID: libraries
+  :END:
+
+** Plot
+   :PROPERTIES:
+   :CUSTOM_ID: plot
+   :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install matplotlib
+    from matplotlib import pyplot
+    pyplot.plot(data_1 [, data_2, ...])
+    pyplot.show()
+    pyplot.savefig(filename, transparent=True)
+#+END_SRC
+
+** Table
+   :PROPERTIES:
+   :CUSTOM_ID: table
+   :END:
+
+**** Prints CSV file as ASCII table:
+     :PROPERTIES:
+     :CUSTOM_ID: prints-csv-file-as-ascii-table
+     :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install tabulate
+    import csv
+    from tabulate import tabulate
+    with open(filename, newline='') as csv_file:
+        reader = csv.reader(csv_file, delimiter=';')
+        headers = [a.title() for a in next(reader)]
+        print(tabulate(reader, headers))
+#+END_SRC
+
+** Curses
+   :PROPERTIES:
+   :CUSTOM_ID: curses
+   :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install curses
+    from curses import wrapper
+
+    def main():
+        wrapper(draw)
+
+    def draw(screen):
+        screen.clear()
+        screen.addstr(0, 0, 'Press ESC to quit.')
+        while screen.getch() != 27:
+            pass
+
+    def get_border(screen):
+        from collections import namedtuple
+        P = namedtuple('P', 'x y')
+        height, width = screen.getmaxyx()
+        return P(width - 1, height - 1)
+#+END_SRC
+
+** Image
+   :PROPERTIES:
+   :CUSTOM_ID: image
+   :END:
+
+**** Creates PNG image of greyscale gradient:
+     :PROPERTIES:
+     :CUSTOM_ID: creates-png-image-of-greyscale-gradient
+     :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install pillow
+    from PIL import Image
+    width, height = 100, 100
+    img = Image.new('L', (width, height), 'white')
+    img.putdata([255*a/(width*height) for a in range(width*height)])
+    img.save('out.png')
+#+END_SRC
+
+*** Modes
+    :PROPERTIES:
+    :CUSTOM_ID: modes
+    :END:
+
+-  ='1'= - 1-bit pixels, black and white, stored with one pixel per
+   byte.
+-  ='L'= - 8-bit pixels, greyscale.
+-  ='RGB'= - 3x8-bit pixels, true color.
+-  ='RGBA'= - 4x8-bit pixels, true color with transparency mask.
+-  ='HSV'= - 3x8-bit pixels, Hue, Saturation, Value color space.
+
+** Audio
+   :PROPERTIES:
+   :CUSTOM_ID: audio
+   :END:
+
+**** Saves list of floats with values between 0 and 1 to a WAV file:
+     :PROPERTIES:
+     :CUSTOM_ID: saves-list-of-floats-with-values-between-0-and-1-to-a-wav-file
+     :END:
+
+#+BEGIN_SRC python
+    import wave, struct
+    frames = [struct.pack('h', int((a-0.5)*60000)) for a in list]
+    wf = wave.open(filename, 'wb')
+    wf.setnchannels(1)
+    wf.setsampwidth(4)
+    wf.setframerate(44100)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+#+END_SRC
+
+** Url
+   :PROPERTIES:
+   :CUSTOM_ID: url
+   :END:
+
+#+BEGIN_SRC python
+    from urllib.parse import quote, quote_plus, unquote, unquote_plus
+#+END_SRC
+
+*** Encode
+    :PROPERTIES:
+    :CUSTOM_ID: encode-1
+    :END:
+
+#+BEGIN_SRC python
+    >>> quote("Can't be in URL!")
+    'Can%27t%20be%20in%20URL%21'
+    >>> quote_plus("Can't be in URL!")
+    'Can%27t+be+in+URL%21'
+#+END_SRC
+
+*** Decode
+    :PROPERTIES:
+    :CUSTOM_ID: decode-1
+    :END:
+
+#+BEGIN_SRC python
+    >>> unquote('Can%27t+be+in+URL%21')
+    "Can't+be+in+URL!"'
+    >>> unquote_plus('Can%27t+be+in+URL%21')
+    "Can't be in URL!"
+#+END_SRC
+
+** Web
+   :PROPERTIES:
+   :CUSTOM_ID: web
+   :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install bottle
+    import bottle
+    from urllib.parse import unquote
+#+END_SRC
+
+*** Run
+    :PROPERTIES:
+    :CUSTOM_ID: run
+    :END:
+
+#+BEGIN_SRC python
+    bottle.run(host='localhost', port=8080)
+    bottle.run(host='0.0.0.0', port=80, server='cherrypy')
+#+END_SRC
+
+*** Static request
+    :PROPERTIES:
+    :CUSTOM_ID: static-request
+    :END:
+
+#+BEGIN_SRC python
+    @route('/img/image')
+    def send_image(image):
+        return static_file(image, 'images/', mimetype='image/png')
+#+END_SRC
+
+*** Dynamic request
+    :PROPERTIES:
+    :CUSTOM_ID: dynamic-request
+    :END:
+
+#+BEGIN_SRC python
+    @route('/sport')
+    def send_page(sport):
+        sport = unquote(sport).lower()
+        page = read_file(sport)
+        return template(page)
+#+END_SRC
+
+*** REST request
+    :PROPERTIES:
+    :CUSTOM_ID: rest-request
+    :END:
+
+#+BEGIN_SRC python
+    @post('/odds/sport')
+    def odds_handler(sport):
+        team = bottle.request.forms.get('team')
+        team = unquote(team).lower()
+
+        db = sqlite3.connect(db_path)
+        home_odds, away_odds = get_odds(db, sport, team)
+        db.close()
+
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['Cache-Control'] = 'no-cache'
+        return json.dumps([home_odds, away_odds])
+#+END_SRC
+
+** Profile
+   :PROPERTIES:
+   :CUSTOM_ID: profile
+   :END:
+
+**** Basic:
+     :PROPERTIES:
+     :CUSTOM_ID: basic-1
+     :END:
+
+#+BEGIN_SRC python
+    from time import time
+    start_time = time()
+    ...
+    duration = time() - start_time
+#+END_SRC
+
+**** Times execution of the passed code:
+     :PROPERTIES:
+     :CUSTOM_ID: times-execution-of-the-passed-code
+     :END:
+
+#+BEGIN_SRC python
+    from timeit import timeit
+    timeit('"-".join(str(n) for n in range(100))', 
+           number=10000, globals=globals())
+#+END_SRC
+
+**** Generates a PNG image of call graph and highlights the bottlenecks:
+     :PROPERTIES:
+     :CUSTOM_ID: generates-a-png-image-of-call-graph-and-highlights-the-bottlenecks
+     :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install pycallgraph
+    import pycallgraph
+    graph = pycallgraph.output.GraphvizOutput()
+    graph.output_file = get_filename()
+    with pycallgraph.PyCallGraph(output=graph):
+        code_to_be_profiled
+#+END_SRC
+
+#+BEGIN_SRC python
+    def get_filename():
+        from datetime import datetime
+        time_str = datetime.now().strftime('%Y%m%d%H%M%S')
+        return f'profile-{time_str}.png'
+#+END_SRC
+
+** Progress Bar
+   :PROPERTIES:
+   :CUSTOM_ID: progress-bar
+   :END:
+
+*** Tqdm
+    :PROPERTIES:
+    :CUSTOM_ID: tqdm
+    :END:
+
+#+BEGIN_SRC python
+    # $ pip3 install tqdm
+    from tqdm import tqdm
+    from time import sleep
+    for i in tqdm(range(100)):
+        sleep(0.02)
+    for i in tqdm([1, 2, 3]):
+        sleep(0.2)
+#+END_SRC
+
+*** Basic
+    :PROPERTIES:
+    :CUSTOM_ID: basic-2
+    :END:
+
+#+BEGIN_SRC python
+    import sys
+
+    class Bar():
+        @staticmethod
+        def range(*args):
+            bar = Bar(len(list(range(*args))))
+            for i in range(*args):
+                yield i 
+                bar.tick()
+        @staticmethod
+        def foreach(elements):
+            bar = Bar(len(elements))
+            for el in elements:
+                yield el
+                bar.tick()
+        def __init__(s, steps, width=40):
+            s.st, s.wi, s.fl, s.i = steps, width, 0, 0
+            s.th = s.fl * s.st / s.wi
+            s.p(f"[{' ' * s.wi}]")
+            s.p('\b' * (s.wi + 1))
+        def tick(s):
+            s.i += 1
+            while s.i > s.th:
+                s.fl += 1
+                s.th = s.fl * s.st / s.wi
+                s.p('-')
+            if s.i == s.st:
+                s.p('\n')
+        def p(s, t):
+            sys.stdout.write(t)
+            sys.stdout.flush()
+#+END_SRC
+
+**** Usage:
+     :PROPERTIES:
+     :CUSTOM_ID: usage
+     :END:
+
+#+BEGIN_SRC python
+    from time import sleep
+    for i in Bar.range(100):
+        sleep(0.02)
+    for el in Bar.foreach([1, 2, 3]):
+        sleep(0.2)
+#+END_SRC
+
+** Basic Script Template
+   :PROPERTIES:
+   :CUSTOM_ID: basic-script-template
+   :END:
+
+#+BEGIN_SRC python
+    #!/usr/bin/env python3
+    #
+    # Usage: .py 
+    # 
+
+    from collections import namedtuple
+    from enum import Enum
+    import re
+    import sys
+
+
+    def main():
+        pass
+        
+
+    ###
+    ##  UTIL
+    #
+
+    def read_file(filename):
+        with open(filename, encoding='utf-8') as file:
+            return file.readlines()
+
+
+    if __name__ == '__main__':
+        main()
+#+END_SRC
